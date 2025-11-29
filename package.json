@@ -12,6 +12,7 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
+    "cli": "ts-node -r tsconfig-paths/register src/cli.ts",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -27,6 +28,10 @@
     "@nestjs/common": "^11.0.1",
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
+    "canvas": "^3.2.0",
+    "nest-commander": "^3.20.1",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^5.4.394",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
   },
