@@ -13,14 +13,14 @@ export class Migration20251201011500 extends Migration {
     // Update rules for Going out category
     this.addSql(`
       UPDATE "transaction_categories"
-      SET "rules" = '{"pattern": "(restaurant|cafe|bar|mcdonald|kfc|hungry jack|subway|domino|pizza|uber eats|deliveroo|menulog|doordash|coffee)"}'::jsonb
+      SET "rules" = '{"pattern": "(restaurant|cafe|bar|mcdonald|kfc|hungry jack|subway|domino|pizza|uber eats|deliveroo|menulog|doordash|coffee|the ugly cook|ikea)"}'::jsonb
       WHERE "slug" = 'going-out';
     `);
 
     // Update rules for Car category
     this.addSql(`
       UPDATE "transaction_categories"
-      SET "rules" = '{"pattern": "(petrol|fuel|reddy|shell|caltex|bp|ampol|7-eleven|7 eleven|mobil|parking|rego|registration|insurance|mechanic|car wash|toll|linkt)"}'::jsonb
+      SET "rules" = '{"pattern": "(petrol|fuel|reddy|shell|caltex|bp|ampol|7-eleven|7 eleven|mobil|parking|rego|registration|insurance|mechanic|car wash|toll|linkt|repco)"}'::jsonb
       WHERE "slug" = 'car';
     `);
 
@@ -34,7 +34,7 @@ export class Migration20251201011500 extends Migration {
     // Update rules for Software / Apps category
     this.addSql(`
       UPDATE "transaction_categories"
-      SET "rules" = '{"pattern": "(netflix|spotify|adobe|microsoft|github|dropbox|google|apple|app store|play store|subscription|icloud|chatgpt|openai|vpn|claude.ai|anthropic|disney)"}'::jsonb
+      SET "rules" = '{"pattern": "(netflix|spotify|adobe|microsoft|github|dropbox|google|apple|app store|play store|subscription|icloud|chatgpt|openai|vpn|claude.ai|anthropic|disney|amazon)"}'::jsonb
       WHERE "slug" = 'software-apps';
     `);
 
@@ -48,7 +48,7 @@ export class Migration20251201011500 extends Migration {
     // Update rules for Health category
     this.addSql(`
       UPDATE "transaction_categories"
-      SET "rules" = '{"pattern": "(pharmacy|chemist|doctor|medical|health|medicare|hospital|physiotherapy|physio|dental|dentist|medibank|bupa|hcf|optical|gym|fitness)"}'::jsonb
+      SET "rules" = '{"pattern": "(pharmacy|chemist|doctor|medical|health|medicare|hospital|physiotherapy|physio|dental|dentist|medibank|bupa|hcf|optical|gym|fitness|anytime fitness)"}'::jsonb
       WHERE "slug" = 'health';
     `);
 
