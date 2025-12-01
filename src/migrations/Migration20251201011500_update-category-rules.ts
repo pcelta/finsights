@@ -6,7 +6,7 @@ export class Migration20251201011500 extends Migration {
     // Update rules for Household category
     this.addSql(`
       UPDATE "transaction_categories"
-      SET "rules" = '{"pattern": "(supermarket|coles|woolworths|supabarn|iga)"}'::jsonb
+      SET "rules" = '{"pattern": "(supermarket|coles|woolworths|supabarn|iga|signature property management|deft payments)"}'::jsonb
       WHERE "slug" = 'household';
     `);
 
