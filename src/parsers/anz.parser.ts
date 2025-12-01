@@ -10,12 +10,30 @@ import {
 export class ANZParser implements BankStatementParser {
   parseStatement(text: string): BankStatement {
     const account = this.parseAccountDetails(text);
-    const transactions = this.parseTransactions(text);
+
+    // Extract year from statement period
+    const year = this.extractYearFromStatementPeriod(text);
+
+    const transactions = this.parseTransactionsWithYear(text, year);
 
     return {
       account,
       transactions,
     };
+  }
+
+  private extractYearFromStatementPeriod(text: string): number {
+    // Extract statement period to get the year
+    const periodMatch = text.match(
+      /Account Statement\s+(\d{1,2}\s+\w+\s+\d{4})\s*-\s*(\d{1,2}\s+\w+\s+(\d{4}))/i,
+    );
+
+    if (periodMatch && periodMatch[3]) {
+      return parseInt(periodMatch[3], 10);
+    }
+
+    // Fallback to current year if not found
+    return new Date().getFullYear();
   }
 
   parseAccountDetails(text: string): AccountDetails {
@@ -84,6 +102,11 @@ export class ANZParser implements BankStatementParser {
   }
 
   parseTransactions(text: string): Transaction[] {
+    const year = this.extractYearFromStatementPeriod(text);
+    return this.parseTransactionsWithYear(text, year);
+  }
+
+  private parseTransactionsWithYear(text: string, year: number): Transaction[] {
     const transactions: Transaction[] = [];
 
     // ANZ-specific transaction pattern
@@ -93,8 +116,11 @@ export class ANZParser implements BankStatementParser {
 
     let match;
     while ((match = transactionRegex.exec(text)) !== null) {
-      const date = match[1].trim();
+      const dateStr = match[1].trim();
       const content = match[2].trim();
+
+      // Append year to the date string
+      const date = `${dateStr} ${year}`;
 
       // Extract all dollar amounts from the content
       const amounts = content.match(/\$[\d,]+\.\d{2}/g);
