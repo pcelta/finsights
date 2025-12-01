@@ -7,6 +7,7 @@ export interface Transaction {
 }
 
 export interface AccountDetails {
+  bankName: string;
   accountName: string;
   accountType: string;
   bsb: string;

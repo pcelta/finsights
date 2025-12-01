@@ -24,11 +24,11 @@ export class Account {
   @Property({ type: 'text', nullable: true })
   description?: string;
 
-  @Property({ onCreate: () => new Date() })
-  createdAt: Date = new Date();
+  @Property({ onCreate: () => new Date(), nullable: true })
+  createdAt?: Date = new Date();
 
-  @Property({ onCreate: () => new Date(), onUpdate: () => new Date() })
-  updatedAt: Date = new Date();
+  @Property({ onCreate: () => new Date(), onUpdate: () => new Date(), nullable: true })
+  updatedAt?: Date = new Date();
 
   @OneToMany(() => Transaction, (transaction) => transaction.account)
   transactions = new Collection<Transaction>(this);

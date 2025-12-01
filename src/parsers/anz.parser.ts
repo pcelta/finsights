@@ -39,7 +39,7 @@ export class ANZParser implements BankStatementParser {
     const bsbMatch = text.match(
       /Branch Number \(BSB\)\s+Account Number\s+Opening Balance\s+Closing Balance\s+(\d{3}\s+\d{3})/i,
     );
-    const bsb = bsbMatch ? bsbMatch[1].replace(/\s+/g, '-') : '';
+    const bsb = bsbMatch ? bsbMatch[1].replace(/\s+/g, '') : '';
 
     // Extract Account Number
     const accountNumberMatch = text.match(
@@ -72,6 +72,7 @@ export class ANZParser implements BankStatementParser {
     const accountName = accountNameMatch ? accountNameMatch[1].trim() : '';
 
     return {
+      bankName: 'ANZ',
       accountName,
       accountType,
       bsb,

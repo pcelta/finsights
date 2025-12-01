@@ -7,6 +7,7 @@ import {
   TransactionParserService,
   BankType,
 } from '../services/transaction-parser.service';
+import { TransactionService } from 'src/services/transaction.service';
 
 interface ParseTransactionsOptions {
   file?: string;
@@ -21,6 +22,7 @@ interface ParseTransactionsOptions {
 export class ParseTransactionsCommand extends CommandRunner {
   constructor(
     private readonly transactionParserService: TransactionParserService,
+    private readonly transactionService: TransactionService,
   ) {
     super();
   }
@@ -68,6 +70,8 @@ export class ParseTransactionsCommand extends CommandRunner {
         fullText,
         bankType,
       );
+
+      await this.transactionService.ingest(statement);
 
       console.error(`Account Name: ${statement.account.accountName}`);
       console.error(

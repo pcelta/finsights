@@ -7,7 +7,7 @@ import {
 } from '@mikro-orm/core';
 import { Transaction } from './transaction.entity';
 
-@Entity({ tableName: 'transaction_category' })
+@Entity({ tableName: 'transaction_categories' })
 export class TransactionCategory {
   @PrimaryKey()
   id!: number;
