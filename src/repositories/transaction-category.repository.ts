@@ -10,4 +10,9 @@ export class TransactionCategoryRepository {
     const em = this.em.fork();
     return em.findOne(TransactionCategory, { slug });
   }
+
+  async findAllWithRules(): Promise<TransactionCategory[]> {
+    const em = this.em.fork();
+    return em.find(TransactionCategory, { rules: { $ne: null } });
+  }
 }

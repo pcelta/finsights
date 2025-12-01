@@ -60,7 +60,7 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "length": 6,
           "mappedType": "datetime"
         },
@@ -70,7 +70,7 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "length": 6,
           "mappedType": "datetime"
         }
@@ -133,6 +133,15 @@
           "nullable": true,
           "mappedType": "text"
         },
+        "rules": {
+          "name": "rules",
+          "type": "jsonb",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "json"
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamptz",
@@ -154,7 +163,7 @@
           "mappedType": "datetime"
         }
       },
-      "name": "transaction_category",
+      "name": "transaction_categories",
       "schema": "public",
       "indexes": [
         {
@@ -162,13 +171,13 @@
             "slug"
           ],
           "composite": false,
-          "keyName": "transaction_category_slug_unique",
+          "keyName": "transaction_categories_slug_unique",
           "constraint": true,
           "primary": false,
           "unique": true
         },
         {
-          "keyName": "transaction_category_pkey",
+          "keyName": "transaction_categories_pkey",
           "columnNames": [
             "id"
           ],
@@ -340,7 +349,7 @@
           "referencedColumnNames": [
             "id"
           ],
-          "referencedTableName": "public.transaction_category",
+          "referencedTableName": "public.transaction_categories",
           "deleteRule": "set null",
           "updateRule": "cascade"
         }

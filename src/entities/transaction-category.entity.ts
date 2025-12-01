@@ -21,6 +21,9 @@ export class TransactionCategory {
   @Property({ type: 'text', nullable: true })
   description?: string;
 
+  @Property({ type: 'jsonb', nullable: true })
+  rules?: object;
+
   @Property({ onCreate: () => new Date() })
   createdAt: Date = new Date();
 
