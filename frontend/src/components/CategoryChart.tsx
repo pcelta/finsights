@@ -1,5 +1,5 @@
 import React from 'react';
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { CategoryBreakdown } from '../services/api';
 import { Box, Typography } from '@mui/material';
 
@@ -29,7 +29,7 @@ const CategoryChart: React.FC<CategoryChartProps> = ({ categories }) => {
 
   const data = categories.map((cat) => ({
     name: cat.name,
-    value: cat.total,
+    amount: cat.total,
     percentage: cat.percentage,
   }));
 
@@ -45,7 +45,7 @@ const CategoryChart: React.FC<CategoryChartProps> = ({ categories }) => {
           }}
         >
           <Typography variant="body2">
-            <strong>{payload[0].name}</strong>
+            <strong>{payload[0].payload.name}</strong>
           </Typography>
           <Typography variant="body2" color="primary">
             ${payload[0].value.toFixed(2)}
@@ -59,30 +59,27 @@ const CategoryChart: React.FC<CategoryChartProps> = ({ categories }) => {
     return null;
   };
 
-  const renderLabel = (entry: any) => {
-    return `${entry.name} (${entry.percentage.toFixed(1)}%)`;
-  };
-
   return (
     <ResponsiveContainer width="100%" height={400}>
-      <PieChart>
-        <Pie
-          data={data}
-          cx="50%"
-          cy="50%"
-          labelLine={false}
-          label={renderLabel}
-          outerRadius={120}
-          fill="#8884d8"
-          dataKey="value"
-        >
+      <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis
+          dataKey="name"
+          angle={-45}
+          textAnchor="end"
+          height={100}
+          interval={0}
+        />
+        <YAxis
+          tickFormatter={(value) => `$${value.toFixed(0)}`}
+        />
+        <Tooltip content={<CustomTooltip />} />
+        <Bar dataKey="amount" radius={[8, 8, 0, 0]}>
           {data.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
-        </Pie>
-        <Tooltip content={<CustomTooltip />} />
-        <Legend />
-      </PieChart>
+        </Bar>
+      </BarChart>
     </ResponsiveContainer>
   );
 };
