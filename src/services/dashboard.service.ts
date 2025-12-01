@@ -140,6 +140,7 @@ export class DashboardService {
         bsb: t.account.bsb,
         number: t.account.number,
         bankName: t.account.bankName,
+        name: t.account.name,
       },
     }));
   }

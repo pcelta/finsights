@@ -21,6 +21,9 @@ export class Account {
   @Property({ length: 100, name: 'bank_name' })
   bankName!: string;
 
+  @Property({ length: 255, nullable: true })
+  name?: string;
+
   @Property({ type: 'text', nullable: true })
   description?: string;
 

@@ -33,6 +33,7 @@ const TransactionsList: React.FC<TransactionsListProps> = ({ transactions }) => 
           <TableRow>
             <TableCell>Date</TableCell>
             <TableCell>Description</TableCell>
+            <TableCell>Account</TableCell>
             <TableCell>Category</TableCell>
             <TableCell align="right">Amount</TableCell>
           </TableRow>
@@ -44,6 +45,11 @@ const TransactionsList: React.FC<TransactionsListProps> = ({ transactions }) => 
                 {format(new Date(transaction.date), 'MMM dd, yyyy')}
               </TableCell>
               <TableCell>{transaction.description}</TableCell>
+              <TableCell>
+                <Typography variant="body2">
+                  {transaction.account.name || transaction.account.bankName}
+                </Typography>
+              </TableCell>
               <TableCell>
                 <Chip
                   label={transaction.category?.name || 'Uncategorized'}

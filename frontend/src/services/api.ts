@@ -36,6 +36,7 @@ export interface Transaction {
     bsb: string;
     number: string;
     bankName: string;
+    name?: string;
   };
 }
 
