@@ -3,7 +3,9 @@ import axios from 'axios';
 const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:3000/api';
 
 export interface Summary {
-  totalSpent: number;
+  totalIncome: number;
+  totalExpenses: number;
+  netAmount: number;
   transactionCount: number;
   categoryCount: number;
   dateRange: {
@@ -27,6 +29,7 @@ export interface Transaction {
   description: string;
   amount: number;
   balance: number;
+  type: 'income' | 'expense';
   category: {
     id: number;
     name: string;

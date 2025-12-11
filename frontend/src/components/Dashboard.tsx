@@ -39,7 +39,7 @@ const Dashboard: React.FC = () => {
       ]);
 
       setSummary(summaryData);
-      setCategories(allCategoriesData); // For pie chart - show all categories
+      setCategories(allCategoriesData); // For chart - show all categories
       setTransactions(transactionsData);
     } catch (error) {
       console.error('Error loading data:', error);
@@ -110,19 +110,26 @@ const Dashboard: React.FC = () => {
 
       {summary && (
         <Box sx={{ display: 'flex', gap: 3, mb: 3, flexWrap: 'wrap' }}>
-          <Box sx={{ flex: '1 1 300px' }}>
-            <Card>
+          <Box sx={{ flex: '1 1 250px' }}>
+            <Card sx={{ bgcolor: summary.netAmount >= 0 ? 'info.light' : 'warning.light' }}>
               <CardContent>
-                <Typography color="textSecondary" gutterBottom>
-                  Total Spent
+                <Typography
+                  color={summary.netAmount >= 0 ? 'info.contrastText' : 'warning.contrastText'}
+                  gutterBottom
+                >
+                  Net Amount
                 </Typography>
-                <Typography variant="h4" component="div">
-                  ${summary.totalSpent.toFixed(2)}
+                <Typography
+                  variant="h4"
+                  component="div"
+                  color={summary.netAmount >= 0 ? 'info.contrastText' : 'warning.contrastText'}
+                >
+                  ${summary.netAmount.toFixed(2)}
                 </Typography>
               </CardContent>
             </Card>
           </Box>
-          <Box sx={{ flex: '1 1 300px' }}>
+          <Box sx={{ flex: '1 1 250px' }}>
             <Card>
               <CardContent>
                 <Typography color="textSecondary" gutterBottom>
@@ -130,18 +137,6 @@ const Dashboard: React.FC = () => {
                 </Typography>
                 <Typography variant="h4" component="div">
                   {summary.transactionCount}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Box>
-          <Box sx={{ flex: '1 1 300px' }}>
-            <Card>
-              <CardContent>
-                <Typography color="textSecondary" gutterBottom>
-                  Categories
-                </Typography>
-                <Typography variant="h4" component="div">
-                  {summary.categoryCount}
                 </Typography>
               </CardContent>
             </Card>

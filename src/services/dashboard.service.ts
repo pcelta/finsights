@@ -24,17 +24,24 @@ export class DashboardService {
       populate: ['category'],
     });
 
-    const totalSpent = transactions.reduce(
-      (sum, t) => sum + Number(t.amount),
-      0,
-    );
+    // Calculate income (negative amounts) and expenses (positive amounts)
+    const totalIncome = transactions
+      .filter(t => Number(t.amount) < 0)
+      .reduce((sum, t) => sum + Math.abs(Number(t.amount)), 0);
+
+    const totalExpenses = transactions
+      .filter(t => Number(t.amount) > 0)
+      .reduce((sum, t) => sum + Number(t.amount), 0);
+
     const transactionCount = transactions.length;
 
     // Get unique categories from filtered transactions
     const uniqueCategoryIds = new Set(transactions.map(t => t.category?.id).filter(id => id !== undefined));
 
     return {
-      totalSpent,
+      totalIncome,
+      totalExpenses,
+      netAmount: totalIncome - totalExpenses,
       transactionCount,
       categoryCount: uniqueCategoryIds.size,
       dateRange: {
@@ -129,6 +136,7 @@ export class DashboardService {
       description: t.description,
       amount: Number(t.amount),
       balance: Number(t.balance),
+      type: t.type,
       category: t.category
         ? {
             id: t.category.id,

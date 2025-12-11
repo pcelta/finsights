@@ -32,7 +32,9 @@ export class TransactionService {
     );
 
     for (const statementTransaction of bankStatement.transactions) {
-      const amount = statementTransaction.debit ?? 0;
+      const amount = statementTransaction.debit ?? statementTransaction.credit ?? 0;
+      const type = statementTransaction.debit ? 'expense' : 'income';
+
       const hash = this.generateHash(
         statementTransaction.description,
         amount,
@@ -56,6 +58,7 @@ export class TransactionService {
       transaction.description = statementTransaction.description;
       transaction.transactionDate = new Date(statementTransaction.date);
       transaction.hash = hash;
+      transaction.type = type;
       transaction.category = category ?? undefined;
 
       await this.transactionRepository.save(transaction);

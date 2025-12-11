@@ -29,6 +29,9 @@ export class Transaction {
   @Property({ type: 'date' })
   transactionDate!: Date;
 
+  @Property({ length: 10 })
+  type!: 'income' | 'expense';
+
   @Property({ onCreate: () => new Date() })
   createdAt: Date = new Date();
 
