@@ -40,7 +40,7 @@ const TransactionsList: React.FC<TransactionsListProps> = ({ transactions }) => 
         </TableHead>
         <TableBody>
           {transactions.map((transaction) => (
-            <TableRow key={transaction.id} hover>
+            <TableRow key={transaction.uid} hover>
               <TableCell>
                 {format(new Date(transaction.date), 'MMM dd, yyyy')}
               </TableCell>

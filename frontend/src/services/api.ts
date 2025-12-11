@@ -15,7 +15,7 @@ export interface Summary {
 }
 
 export interface CategoryBreakdown {
-  id: number;
+  uid: string;
   name: string;
   slug: string;
   total: number;
@@ -24,18 +24,19 @@ export interface CategoryBreakdown {
 }
 
 export interface Transaction {
-  id: number;
+  uid: string;
   date: string;
   description: string;
   amount: number;
   balance: number;
   type: 'income' | 'expense';
   category: {
-    id: number;
+    uid: string;
     name: string;
     slug: string;
   } | null;
   account: {
+    uid: string;
     bsb: string;
     number: string;
     bankName: string;
@@ -44,21 +45,21 @@ export interface Transaction {
 }
 
 export const dashboardApi = {
-  getSummary: async (startDate?: string, endDate?: string, categoryId?: number): Promise<Summary> => {
+  getSummary: async (startDate?: string, endDate?: string, categoryUid?: string): Promise<Summary> => {
     const params = new URLSearchParams();
     if (startDate) params.append('startDate', startDate);
     if (endDate) params.append('endDate', endDate);
-    if (categoryId) params.append('categoryId', categoryId.toString());
+    if (categoryUid) params.append('categoryUid', categoryUid);
 
     const response = await axios.get(`${API_BASE}/dashboard/summary?${params}`);
     return response.data;
   },
 
-  getCategoryBreakdown: async (startDate?: string, endDate?: string, categoryId?: number): Promise<CategoryBreakdown[]> => {
+  getCategoryBreakdown: async (startDate?: string, endDate?: string, categoryUid?: string): Promise<CategoryBreakdown[]> => {
     const params = new URLSearchParams();
     if (startDate) params.append('startDate', startDate);
     if (endDate) params.append('endDate', endDate);
-    if (categoryId) params.append('categoryId', categoryId.toString());
+    if (categoryUid) params.append('categoryUid', categoryUid);
 
     const response = await axios.get(`${API_BASE}/dashboard/categories?${params}`);
     return response.data;
@@ -67,12 +68,12 @@ export const dashboardApi = {
   getTransactions: async (
     startDate?: string,
     endDate?: string,
-    categoryId?: number
+    categoryUid?: string
   ): Promise<Transaction[]> => {
     const params = new URLSearchParams();
     if (startDate) params.append('startDate', startDate);
     if (endDate) params.append('endDate', endDate);
-    if (categoryId) params.append('categoryId', categoryId.toString());
+    if (categoryUid) params.append('categoryUid', categoryUid);
 
     const response = await axios.get(`${API_BASE}/dashboard/transactions?${params}`);
     return response.data;

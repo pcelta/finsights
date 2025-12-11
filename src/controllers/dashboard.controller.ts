@@ -9,12 +9,12 @@ export class DashboardController {
   async getSummary(
     @Query('startDate') startDate?: string,
     @Query('endDate') endDate?: string,
-    @Query('categoryId') categoryId?: string,
+    @Query('categoryUid') categoryUid?: string,
   ) {
     return this.dashboardService.getSummary(
       startDate,
       endDate,
-      categoryId ? parseInt(categoryId) : undefined,
+      categoryUid,
     );
   }
 
@@ -22,12 +22,12 @@ export class DashboardController {
   async getCategoryBreakdown(
     @Query('startDate') startDate?: string,
     @Query('endDate') endDate?: string,
-    @Query('categoryId') categoryId?: string,
+    @Query('categoryUid') categoryUid?: string,
   ) {
     return this.dashboardService.getCategoryBreakdown(
       startDate,
       endDate,
-      categoryId ? parseInt(categoryId) : undefined,
+      categoryUid,
     );
   }
 
@@ -35,12 +35,12 @@ export class DashboardController {
   async getTransactions(
     @Query('startDate') startDate?: string,
     @Query('endDate') endDate?: string,
-    @Query('categoryId') categoryId?: string,
+    @Query('categoryUid') categoryUid?: string,
   ) {
     return this.dashboardService.getTransactions(
       startDate,
       endDate,
-      categoryId ? parseInt(categoryId) : undefined,
+      categoryUid,
     );
   }
 }

@@ -4,14 +4,19 @@ import {
   Property,
   ManyToOne,
   Index,
+  BeforeCreate,
 } from '@mikro-orm/core';
 import { Account } from './account.entity';
 import { TransactionCategory } from './transaction-category.entity';
+import { randomUUID } from 'crypto';
 
 @Entity({ tableName: 'transactions' })
 export class Transaction {
   @PrimaryKey()
   id!: number;
+
+  @Property({ length: 36, unique: true })
+  uid!: string;
 
   @Property({ type: 'text' })
   description!: string;
@@ -43,4 +48,11 @@ export class Transaction {
 
   @ManyToOne(() => TransactionCategory, { nullable: true })
   category?: TransactionCategory;
+
+  @BeforeCreate()
+  generateUid() {
+    if (!this.uid) {
+      this.uid = randomUUID();
+    }
+  }
 }

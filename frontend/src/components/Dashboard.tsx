@@ -20,7 +20,7 @@ import TransactionsList from './TransactionsList';
 const Dashboard: React.FC = () => {
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | ''>('');
+  const [selectedCategoryUid, setSelectedCategoryUid] = useState<string>('');
   const [summary, setSummary] = useState<Summary | null>(null);
   const [categories, setCategories] = useState<CategoryBreakdown[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -29,13 +29,12 @@ const Dashboard: React.FC = () => {
   const loadData = async () => {
     setLoading(true);
     try {
-      const categoryId = selectedCategoryId === '' ? undefined : selectedCategoryId;
+      const categoryUid = selectedCategoryUid === '' ? undefined : selectedCategoryUid;
 
-      const [summaryData, filteredCategoriesData, allCategoriesData, transactionsData] = await Promise.all([
-        dashboardApi.getSummary(startDate, endDate, categoryId),
-        dashboardApi.getCategoryBreakdown(startDate, endDate, categoryId),
+      const [summaryData, allCategoriesData, transactionsData] = await Promise.all([
+        dashboardApi.getSummary(startDate, endDate, categoryUid),
         dashboardApi.getCategoryBreakdown(startDate, endDate),
-        dashboardApi.getTransactions(startDate, endDate, categoryId),
+        dashboardApi.getTransactions(startDate, endDate, categoryUid),
       ]);
 
       setSummary(summaryData);
@@ -57,7 +56,7 @@ const Dashboard: React.FC = () => {
   const handleClearFilters = () => {
     setStartDate('');
     setEndDate('');
-    setSelectedCategoryId('');
+    setSelectedCategoryUid('');
   };
 
   return (
@@ -87,13 +86,13 @@ const Dashboard: React.FC = () => {
           <FormControl sx={{ minWidth: 200 }}>
             <InputLabel>Category</InputLabel>
             <Select
-              value={selectedCategoryId}
+              value={selectedCategoryUid}
               label="Category"
-              onChange={(e) => setSelectedCategoryId(e.target.value as number | '')}
+              onChange={(e) => setSelectedCategoryUid(e.target.value as string)}
             >
               <MenuItem value="">All Categories</MenuItem>
               {categories.map((cat) => (
-                <MenuItem key={cat.id} value={cat.id}>
+                <MenuItem key={cat.uid} value={cat.uid}>
                   {cat.name}
                 </MenuItem>
               ))}

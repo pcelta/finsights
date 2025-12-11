@@ -15,6 +15,16 @@
           "nullable": false,
           "mappedType": "integer"
         },
+        "uid": {
+          "name": "uid",
+          "type": "varchar(36)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 36,
+          "mappedType": "string"
+        },
         "bsb": {
           "name": "bsb",
           "type": "varchar(6)",
@@ -89,6 +99,16 @@
       "schema": "public",
       "indexes": [
         {
+          "columnNames": [
+            "uid"
+          ],
+          "composite": false,
+          "keyName": "accounts_uid_unique",
+          "constraint": true,
+          "primary": false,
+          "unique": true
+        },
+        {
           "keyName": "accounts_pkey",
           "columnNames": [
             "id"
@@ -113,6 +133,16 @@
           "primary": true,
           "nullable": false,
           "mappedType": "integer"
+        },
+        "uid": {
+          "name": "uid",
+          "type": "varchar(36)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 36,
+          "mappedType": "string"
         },
         "name": {
           "name": "name",
@@ -178,6 +208,16 @@
       "indexes": [
         {
           "columnNames": [
+            "uid"
+          ],
+          "composite": false,
+          "keyName": "transaction_categories_uid_unique",
+          "constraint": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "columnNames": [
             "slug"
           ],
           "composite": false,
@@ -211,6 +251,16 @@
           "primary": true,
           "nullable": false,
           "mappedType": "integer"
+        },
+        "uid": {
+          "name": "uid",
+          "type": "varchar(36)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 36,
+          "mappedType": "string"
         },
         "description": {
           "name": "description",
@@ -263,6 +313,16 @@
           "length": 0,
           "mappedType": "date"
         },
+        "type": {
+          "name": "type",
+          "type": "varchar(10)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 10,
+          "mappedType": "string"
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamptz",
@@ -305,6 +365,16 @@
       "name": "transactions",
       "schema": "public",
       "indexes": [
+        {
+          "columnNames": [
+            "uid"
+          ],
+          "composite": false,
+          "keyName": "transactions_uid_unique",
+          "constraint": true,
+          "primary": false,
+          "unique": true
+        },
         {
           "columnNames": [
             "hash"

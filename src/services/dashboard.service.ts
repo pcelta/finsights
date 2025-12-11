@@ -6,7 +6,7 @@ import { Transaction } from '../entities/transaction.entity';
 export class DashboardService {
   constructor(private readonly em: EntityManager) {}
 
-  async getSummary(startDate?: string, endDate?: string, categoryId?: number) {
+  async getSummary(startDate?: string, endDate?: string, categoryUid?: string) {
     const em = this.em.fork();
 
     const where: any = {};
@@ -16,8 +16,8 @@ export class DashboardService {
     if (endDate) {
       where.transactionDate = { ...where.transactionDate, $lte: new Date(endDate) };
     }
-    if (categoryId) {
-      where.category = categoryId;
+    if (categoryUid) {
+      where.category = { uid: categoryUid };
     }
 
     const transactions = await em.find(Transaction, where, {
@@ -36,14 +36,14 @@ export class DashboardService {
     const transactionCount = transactions.length;
 
     // Get unique categories from filtered transactions
-    const uniqueCategoryIds = new Set(transactions.map(t => t.category?.id).filter(id => id !== undefined));
+    const uniqueCategoryUids = new Set(transactions.map(t => t.category?.uid).filter(uid => uid !== undefined));
 
     return {
       totalIncome,
       totalExpenses,
       netAmount: totalIncome - totalExpenses,
       transactionCount,
-      categoryCount: uniqueCategoryIds.size,
+      categoryCount: uniqueCategoryUids.size,
       dateRange: {
         start: startDate,
         end: endDate,
@@ -51,7 +51,7 @@ export class DashboardService {
     };
   }
 
-  async getCategoryBreakdown(startDate?: string, endDate?: string, categoryId?: number) {
+  async getCategoryBreakdown(startDate?: string, endDate?: string, categoryUid?: string) {
     const em = this.em.fork();
 
     const where: any = {};
@@ -61,8 +61,8 @@ export class DashboardService {
     if (endDate) {
       where.transactionDate = { ...where.transactionDate, $lte: new Date(endDate) };
     }
-    if (categoryId) {
-      where.category = categoryId;
+    if (categoryUid) {
+      where.category = { uid: categoryUid };
     }
 
     const transactions = await em.find(Transaction, where, {
@@ -70,16 +70,16 @@ export class DashboardService {
     });
 
     // Group by category
-    const categoryMap = new Map<number, { id: number; name: string; slug: string; total: number; count: number }>();
+    const categoryMap = new Map<string, { uid: string; name: string; slug: string; total: number; count: number }>();
 
     transactions.forEach((t) => {
-      const categoryId = t.category?.id || 0;
+      const categoryUid = t.category?.uid || 'uncategorized';
       const categoryName = t.category?.name || 'Uncategorized';
       const categorySlug = t.category?.slug || 'uncategorized';
 
-      if (!categoryMap.has(categoryId)) {
-        categoryMap.set(categoryId, {
-          id: categoryId,
+      if (!categoryMap.has(categoryUid)) {
+        categoryMap.set(categoryUid, {
+          uid: categoryUid,
           name: categoryName,
           slug: categorySlug,
           total: 0,
@@ -87,7 +87,7 @@ export class DashboardService {
         });
       }
 
-      const category = categoryMap.get(categoryId)!;
+      const category = categoryMap.get(categoryUid)!;
       category.total += Number(t.amount);
       category.count += 1;
     });
@@ -98,7 +98,7 @@ export class DashboardService {
     const total = results.reduce((sum, r) => sum + r.total, 0);
 
     return results.map((r) => ({
-      id: r.id,
+      uid: r.uid,
       name: r.name,
       slug: r.slug,
       total: r.total,
@@ -110,7 +110,7 @@ export class DashboardService {
   async getTransactions(
     startDate?: string,
     endDate?: string,
-    categoryId?: number,
+    categoryUid?: string,
   ) {
     const em = this.em.fork();
 
@@ -121,8 +121,8 @@ export class DashboardService {
     if (endDate) {
       where.transactionDate = { ...where.transactionDate, $lte: new Date(endDate) };
     }
-    if (categoryId) {
-      where.category = categoryId;
+    if (categoryUid) {
+      where.category = { uid: categoryUid };
     }
 
     const transactions = await em.find(Transaction, where, {
@@ -131,7 +131,7 @@ export class DashboardService {
     });
 
     return transactions.map((t) => ({
-      id: t.id,
+      uid: t.uid,
       date: t.transactionDate,
       description: t.description,
       amount: Number(t.amount),
@@ -139,12 +139,13 @@ export class DashboardService {
       type: t.type,
       category: t.category
         ? {
-            id: t.category.id,
+            uid: t.category.uid,
             name: t.category.name,
             slug: t.category.slug,
           }
         : null,
       account: {
+        uid: t.account.uid,
         bsb: t.account.bsb,
         number: t.account.number,
         bankName: t.account.bankName,
