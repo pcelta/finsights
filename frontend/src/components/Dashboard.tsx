@@ -69,8 +69,8 @@ const Dashboard: React.FC = () => {
 
   return (
     <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
-      <Typography variant="h3" component="h1" gutterBottom>
-        Financial Insights Dashboard
+      <Typography variant="h4" component="h1" gutterBottom>
+        FinInsights - Dashboard
       </Typography>
 
       <Paper sx={{ p: 2, mb: 3 }}>
