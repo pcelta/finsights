@@ -24,11 +24,7 @@ export class DashboardService {
       populate: ['category'],
     });
 
-    // Calculate income (negative amounts) and expenses (positive amounts)
-    const totalIncome = transactions
-      .filter(t => Number(t.amount) < 0)
-      .reduce((sum, t) => sum + Math.abs(Number(t.amount)), 0);
-
+    // Calculate expenses (positive amounts)
     const totalExpenses = transactions
       .filter(t => Number(t.amount) > 0)
       .reduce((sum, t) => sum + Number(t.amount), 0);
@@ -39,9 +35,7 @@ export class DashboardService {
     const uniqueCategoryUids = new Set(transactions.map(t => t.category?.uid).filter(uid => uid !== undefined));
 
     return {
-      totalIncome,
       totalExpenses,
-      netAmount: totalIncome - totalExpenses,
       transactionCount,
       categoryCount: uniqueCategoryUids.size,
       dateRange: {
