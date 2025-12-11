@@ -50,4 +50,12 @@ export class TransactionCategoryService {
 
     return this.transactionCategoryRepository.findBySlug('other');
   }
+
+  public async findByUid(uid: string): Promise<TransactionCategory | null> {
+    return this.transactionCategoryRepository.findByUid(uid);
+  }
+
+  public async findAll(): Promise<TransactionCategory[]> {
+    return this.transactionCategoryRepository.findAll();
+  }
 }

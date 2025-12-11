@@ -64,4 +64,23 @@ export class TransactionService {
       await this.transactionRepository.save(transaction);
     }
   }
+
+  async updateCategory(transactionUid: string, categoryUid: string | null): Promise<Transaction> {
+    const transaction = await this.transactionRepository.findByUid(transactionUid);
+    if (!transaction) {
+      throw new Error('Transaction not found');
+    }
+
+    if (categoryUid) {
+      const category = await this.transactionCategoryService.findByUid(categoryUid);
+      if (!category) {
+        throw new Error('Category not found');
+      }
+      transaction.category = category;
+    } else {
+      transaction.category = undefined;
+    }
+
+    return this.transactionRepository.save(transaction);
+  }
 }

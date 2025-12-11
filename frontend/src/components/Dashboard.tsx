@@ -59,6 +59,14 @@ const Dashboard: React.FC = () => {
     setSelectedCategoryUid('');
   };
 
+  const handleTransactionUpdate = (updatedTransaction: Transaction) => {
+    setTransactions((prevTransactions) =>
+      prevTransactions.map((t) =>
+        t.uid === updatedTransaction.uid ? updatedTransaction : t
+      )
+    );
+  };
+
   return (
     <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
       <Typography variant="h3" component="h1" gutterBottom>
@@ -158,7 +166,11 @@ const Dashboard: React.FC = () => {
             <Typography variant="h6" gutterBottom>
               Recent Transactions
             </Typography>
-            <TransactionsList transactions={transactions} />
+            <TransactionsList
+              transactions={transactions}
+              categories={categories}
+              onTransactionUpdate={handleTransactionUpdate}
+            />
           </Paper>
         </Box>
       </Box>

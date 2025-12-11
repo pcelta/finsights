@@ -79,3 +79,12 @@ export const dashboardApi = {
     return response.data;
   },
 };
+
+export const transactionApi = {
+  updateCategory: async (transactionUid: string, categoryUid: string | null): Promise<Transaction> => {
+    const response = await axios.patch(`${API_BASE}/transactions/${transactionUid}/category`, {
+      categoryUid,
+    });
+    return response.data;
+  },
+};

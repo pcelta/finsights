@@ -16,4 +16,9 @@ export class TransactionRepository {
     const em = this.em.fork();
     return em.findOne(Transaction, { hash });
   }
+
+  async findByUid(uid: string): Promise<Transaction | null> {
+    const em = this.em.fork();
+    return em.findOne(Transaction, { uid }, { populate: ['category', 'account'] });
+  }
 }

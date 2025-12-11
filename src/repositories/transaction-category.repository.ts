@@ -15,4 +15,14 @@ export class TransactionCategoryRepository {
     const em = this.em.fork();
     return em.find(TransactionCategory, { rules: { $ne: null } });
   }
+
+  async findByUid(uid: string): Promise<TransactionCategory | null> {
+    const em = this.em.fork();
+    return em.findOne(TransactionCategory, { uid });
+  }
+
+  async findAll(): Promise<TransactionCategory[]> {
+    const em = this.em.fork();
+    return em.findAll(TransactionCategory);
+  }
 }
