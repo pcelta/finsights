@@ -12,7 +12,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Paper from '@mui/material/Paper';
 import Copyright from '../internals/components/Copyright';
 import StatCard, { StatCardProps } from './StatCard';
-import ChartUserByCountry from './ChartUserByCountry';
+import ChartExpensesPerCategory from './ChartExpensesPerCategory';
 import { dashboardApi, Summary, CategoryBreakdown, Transaction } from '../../../../services/api';
 import TransactionsList from '../../../TransactionsList';
 
@@ -170,7 +170,7 @@ export default function MainGrid() {
         </Grid>
         <Grid size={{ xs: 12, lg: 3 }}>
           <Stack gap={2} direction={{ xs: 'column', sm: 'row', lg: 'column' }}>
-            <ChartUserByCountry categories={categories} />
+            <ChartExpensesPerCategory categories={categories} />
           </Stack>
         </Grid>
       </Grid>

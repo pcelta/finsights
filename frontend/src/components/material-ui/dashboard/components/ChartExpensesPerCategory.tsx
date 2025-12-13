@@ -79,14 +79,13 @@ interface CategoryChartProps {
   categories: CategoryBreakdown[];
 }
 
-export default function ChartUserByCountry({ categories }: CategoryChartProps) {
+export default function ChartExpensesPerCategory({ categories }: CategoryChartProps) {
   const totalAmount = categories.reduce((sum, cat) => sum + cat.total, 0);
   const totalCount = categories.reduce((sum, cat) => sum + cat.count, 0);
 
-  // Prepare data for pie chart - show top 5 categories
+  // Prepare data for pie chart - show all categories
   const topCategories = [...categories]
-    .sort((a, b) => b.total - a.total)
-    .slice(0, 5);
+    .sort((a, b) => b.total - a.total);
 
   const data = topCategories.map(cat => ({
     label: cat.name,
