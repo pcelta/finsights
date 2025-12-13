@@ -1,23 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Container,
-  Paper,
-  Typography,
-  TextField,
-  Button,
-  Box,
-  Card,
-  CardContent,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-} from '@mui/material';
-import { dashboardApi, Summary, CategoryBreakdown, Transaction } from '../services/api';
-import CategoryChart from './CategoryChart';
-import TransactionsList from './TransactionsList';
+import { useState, useEffect } from 'react';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import Paper from '@mui/material/Paper';
+import Copyright from '../internals/components/Copyright';
+import StatCard, { StatCardProps } from './StatCard';
+import ChartUserByCountry from './ChartUserByCountry';
+import { dashboardApi, Summary, CategoryBreakdown, Transaction } from '../../../../services/api';
+import TransactionsList from '../../../TransactionsList';
 
-const Dashboard: React.FC = () => {
+export default function MainGrid() {
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
   const [selectedCategoryUid, setSelectedCategoryUid] = useState<string>('');
@@ -38,11 +37,10 @@ const Dashboard: React.FC = () => {
       ]);
 
       setSummary(summaryData);
-      setCategories(allCategoriesData); // For chart - show all categories
+      setCategories(allCategoriesData);
       setTransactions(transactionsData);
     } catch (error) {
       console.error('Error loading data:', error);
-      alert('Error loading data. Please ensure the backend API is running on http://localhost:3000');
     } finally {
       setLoading(false);
     }
@@ -67,12 +65,33 @@ const Dashboard: React.FC = () => {
     );
   };
 
-  return (
-    <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        FinInsights - Dashboard
-      </Typography>
+  const statCards: StatCardProps[] = summary ? [
+    {
+      title: 'Total Expenses',
+      value: `$${summary.totalExpenses.toFixed(2)}`,
+      interval: startDate || endDate ? `${startDate || 'Start'} - ${endDate || 'End'}` : 'All time',
+      trend: 'neutral',
+      data: [],
+    },
+    {
+      title: 'Transactions',
+      value: summary.transactionCount.toString(),
+      interval: startDate || endDate ? `${startDate || 'Start'} - ${endDate || 'End'}` : 'All time',
+      trend: 'neutral',
+      data: [],
+    },
+    {
+      title: 'Categories',
+      value: summary.categoryCount.toString(),
+      interval: 'Active categories',
+      trend: 'neutral',
+      data: [],
+    },
+  ] : [];
 
+  return (
+    <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
+      {/* Filters */}
       <Paper sx={{ p: 2, mb: 3 }}>
         <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
           <TextField
@@ -115,46 +134,29 @@ const Dashboard: React.FC = () => {
         </Box>
       </Paper>
 
-      {summary && (
-        <Box sx={{ display: 'flex', gap: 3, mb: 3, flexWrap: 'wrap' }}>
-          <Box sx={{ flex: '1 1 250px' }}>
-            <Card sx={{ bgcolor: 'error.light' }}>
-              <CardContent>
-                <Typography color="error.contrastText" gutterBottom>
-                  Total Expenses
-                </Typography>
-                <Typography variant="h4" component="div" color="error.contrastText">
-                  ${summary.totalExpenses.toFixed(2)}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Box>
-          <Box sx={{ flex: '1 1 250px' }}>
-            <Card>
-              <CardContent>
-                <Typography color="textSecondary" gutterBottom>
-                  Transactions
-                </Typography>
-                <Typography variant="h4" component="div">
-                  {summary.transactionCount}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Box>
-        </Box>
-      )}
+      {/* Summary Cards */}
+      <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
+        Overview
+      </Typography>
+      <Grid
+        container
+        spacing={2}
+        columns={12}
+        sx={{ mb: (theme) => theme.spacing(2) }}
+      >
+        {statCards.map((card, index) => (
+          <Grid key={index} size={{ xs: 12, sm: 6, lg: 4 }}>
+            <StatCard {...card} />
+          </Grid>
+        ))}
+      </Grid>
 
-      <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
-        <Box sx={{ flex: '1 1 400px', minWidth: 0 }}>
-          <Paper sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Spending by Category
-            </Typography>
-            <CategoryChart categories={categories} />
-          </Paper>
-        </Box>
-
-        <Box sx={{ flex: '1.4 1 500px', minWidth: 0 }}>
+      {/* Details */}
+      <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
+        Details
+      </Typography>
+      <Grid container spacing={2} columns={12}>
+        <Grid size={{ xs: 12, lg: 9 }}>
           <Paper sx={{ p: 2 }}>
             <Typography variant="h6" gutterBottom>
               Recent Transactions
@@ -165,10 +167,14 @@ const Dashboard: React.FC = () => {
               onTransactionUpdate={handleTransactionUpdate}
             />
           </Paper>
-        </Box>
-      </Box>
-    </Container>
+        </Grid>
+        <Grid size={{ xs: 12, lg: 3 }}>
+          <Stack gap={2} direction={{ xs: 'column', sm: 'row', lg: 'column' }}>
+            <ChartUserByCountry categories={categories} />
+          </Stack>
+        </Grid>
+      </Grid>
+      <Copyright sx={{ my: 4 }} />
+    </Box>
   );
-};
-
-export default Dashboard;
+}
