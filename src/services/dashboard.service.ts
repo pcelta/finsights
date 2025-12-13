@@ -9,7 +9,9 @@ export class DashboardService {
   async getSummary(startDate?: string, endDate?: string, categoryUid?: string) {
     const em = this.em.fork();
 
-    const where: any = {};
+    const where: any = {
+      type: { $ne: 'transfer' },
+    };
     if (startDate) {
       where.transactionDate = { ...where.transactionDate, $gte: new Date(startDate) };
     }
@@ -48,7 +50,9 @@ export class DashboardService {
   async getCategoryBreakdown(startDate?: string, endDate?: string, categoryUid?: string) {
     const em = this.em.fork();
 
-    const where: any = {};
+    const where: any = {
+      type: { $ne: 'transfer' },
+    };
     if (startDate) {
       where.transactionDate = { ...where.transactionDate, $gte: new Date(startDate) };
     }
@@ -108,7 +112,9 @@ export class DashboardService {
   ) {
     const em = this.em.fork();
 
-    const where: any = {};
+    const where: any = {
+      type: { $ne: 'transfer' },
+    };
     if (startDate) {
       where.transactionDate = { ...where.transactionDate, $gte: new Date(startDate) };
     }
