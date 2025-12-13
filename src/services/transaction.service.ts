@@ -83,4 +83,18 @@ export class TransactionService {
 
     return this.transactionRepository.save(transaction);
   }
+
+  async updateType(transactionUid: string, type: 'income' | 'expense' | 'transfer'): Promise<Transaction> {
+    const transaction = await this.transactionRepository.findByUid(transactionUid);
+    if (!transaction) {
+      throw new Error('Transaction not found');
+    }
+
+    if (!['income', 'expense', 'transfer'].includes(type)) {
+      throw new Error('Invalid transaction type');
+    }
+
+    transaction.type = type;
+    return this.transactionRepository.save(transaction);
+  }
 }

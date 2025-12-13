@@ -39,7 +39,9 @@ const TransactionsList: React.FC<TransactionsListProps> = ({
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [typeDialogOpen, setTypeDialogOpen] = useState(false);
   const [selectedCategoryUid, setSelectedCategoryUid] = useState<string>('');
+  const [selectedType, setSelectedType] = useState<'income' | 'expense' | 'transfer'>('expense');
   const [updating, setUpdating] = useState(false);
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, transaction: Transaction) => {
@@ -59,10 +61,24 @@ const TransactionsList: React.FC<TransactionsListProps> = ({
     }
   };
 
+  const handleChangeTypeClick = () => {
+    if (selectedTransaction) {
+      setSelectedType(selectedTransaction.type);
+      setTypeDialogOpen(true);
+      handleMenuClose();
+    }
+  };
+
   const handleDialogClose = () => {
     setDialogOpen(false);
     setSelectedTransaction(null);
     setSelectedCategoryUid('');
+  };
+
+  const handleTypeDialogClose = () => {
+    setTypeDialogOpen(false);
+    setSelectedTransaction(null);
+    setSelectedType('expense');
   };
 
   const handleSaveCategory = async () => {
@@ -86,6 +102,27 @@ const TransactionsList: React.FC<TransactionsListProps> = ({
     }
   };
 
+  const handleSaveType = async () => {
+    if (!selectedTransaction) return;
+
+    setUpdating(true);
+    try {
+      const updatedTransaction = await transactionApi.updateType(
+        selectedTransaction.uid,
+        selectedType
+      );
+      if (onTransactionUpdate) {
+        onTransactionUpdate(updatedTransaction);
+      }
+      handleTypeDialogClose();
+    } catch (error) {
+      console.error('Error updating type:', error);
+      alert('Failed to update type. Please try again.');
+    } finally {
+      setUpdating(false);
+    }
+  };
+
   if (!transactions || transactions.length === 0) {
     return (
       <Box sx={{ textAlign: 'center', py: 4 }}>
@@ -104,6 +141,7 @@ const TransactionsList: React.FC<TransactionsListProps> = ({
               <TableCell>Description</TableCell>
               <TableCell>Account</TableCell>
               <TableCell>Category</TableCell>
+              <TableCell>Type</TableCell>
               <TableCell align="right">Amount</TableCell>
               <TableCell align="right"></TableCell>
             </TableRow>
@@ -126,6 +164,18 @@ const TransactionsList: React.FC<TransactionsListProps> = ({
                     size="small"
                     color={transaction.category ? 'primary' : 'default'}
                     variant="outlined"
+                  />
+                </TableCell>
+                <TableCell>
+                  <Chip
+                    label={transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)}
+                    size="small"
+                    color={
+                      transaction.type === 'income' ? 'success' :
+                      transaction.type === 'expense' ? 'error' :
+                      'info'
+                    }
+                    variant="filled"
                   />
                 </TableCell>
                 <TableCell align="right">
@@ -159,6 +209,7 @@ const TransactionsList: React.FC<TransactionsListProps> = ({
         onClose={handleMenuClose}
       >
         <MenuItem onClick={handleChangeCategoryClick}>Change Category</MenuItem>
+        <MenuItem onClick={handleChangeTypeClick}>Change Type</MenuItem>
       </Menu>
 
       <Dialog open={dialogOpen} onClose={handleDialogClose} maxWidth="sm" fullWidth>
@@ -191,6 +242,39 @@ const TransactionsList: React.FC<TransactionsListProps> = ({
           </Button>
           <Button
             onClick={handleSaveCategory}
+            variant="contained"
+            disabled={updating}
+          >
+            {updating ? 'Saving...' : 'Save'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={typeDialogOpen} onClose={handleTypeDialogClose} maxWidth="sm" fullWidth>
+        <DialogTitle>Change Type</DialogTitle>
+        <DialogContent>
+          <Box sx={{ pt: 2 }}>
+            <FormControl fullWidth>
+              <InputLabel>Type</InputLabel>
+              <Select
+                value={selectedType}
+                label="Type"
+                onChange={(e) => setSelectedType(e.target.value as 'income' | 'expense' | 'transfer')}
+                disabled={updating}
+              >
+                <MenuItem value="income">Income</MenuItem>
+                <MenuItem value="expense">Expense</MenuItem>
+                <MenuItem value="transfer">Transfer</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleTypeDialogClose} disabled={updating}>
+            Cancel
+          </Button>
+          <Button
+            onClick={handleSaveType}
             variant="contained"
             disabled={updating}
           >

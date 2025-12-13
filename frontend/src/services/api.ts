@@ -27,7 +27,7 @@ export interface Transaction {
   description: string;
   amount: number;
   balance: number;
-  type: 'income' | 'expense';
+  type: 'income' | 'expense' | 'transfer';
   category: {
     uid: string;
     name: string;
@@ -82,6 +82,13 @@ export const transactionApi = {
   updateCategory: async (transactionUid: string, categoryUid: string | null): Promise<Transaction> => {
     const response = await axios.patch(`${API_BASE}/transactions/${transactionUid}/category`, {
       categoryUid,
+    });
+    return response.data;
+  },
+
+  updateType: async (transactionUid: string, type: 'income' | 'expense' | 'transfer'): Promise<Transaction> => {
+    const response = await axios.patch(`${API_BASE}/transactions/${transactionUid}/type`, {
+      type,
     });
     return response.data;
   },

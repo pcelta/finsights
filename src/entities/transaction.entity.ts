@@ -35,7 +35,7 @@ export class Transaction {
   transactionDate!: Date;
 
   @Property({ length: 10 })
-  type!: 'income' | 'expense';
+  type!: 'income' | 'expense' | 'transfer';
 
   @Property({ onCreate: () => new Date() })
   createdAt: Date = new Date();
