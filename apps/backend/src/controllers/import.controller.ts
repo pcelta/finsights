@@ -67,7 +67,7 @@ export class ImportController {
     };
   }
 
-  @Get('imports')
+  @Get('/')
   async getAllImports() {
     const imports = await this.statementImportService.findAll();
 

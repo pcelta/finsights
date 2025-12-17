@@ -136,7 +136,7 @@ export const importApi = {
   },
 
   getAllImports: async (): Promise<StatementImport[]> => {
-    const response = await axios.get(`${API_BASE}/imports`);
+    const response = await axios.get(`${API_BASE}/import`);
     return response.data;
   },
 };

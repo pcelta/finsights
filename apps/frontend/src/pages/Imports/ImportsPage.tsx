@@ -6,6 +6,7 @@ import {
   Typography,
   CircularProgress,
   Alert,
+  Chip,
 } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import AddIcon from '@mui/icons-material/Add';
@@ -70,31 +71,21 @@ export default function ImportsPage() {
         const status = params.value as string;
         let color: 'default' | 'primary' | 'success' | 'error' = 'default';
 
-        if (status === 'processing') color = 'primary';
-        else if (status === 'processed') color = 'success';
-        else if (status === 'failed') color = 'error';
+        if (status === 'processing') {
+          color = 'primary'
+        } else if (status === 'processed') {
+          color = 'success';
+        } else if (status === 'failed') {
+          color = 'error';
+        }
 
         return (
-          <Box
-            sx={{
-              px: 1.5,
-              py: 0.5,
-              borderRadius: 1,
-              bgcolor:
-                color === 'primary' ? 'primary.light' :
-                color === 'success' ? 'success.light' :
-                color === 'error' ? 'error.light' :
-                'grey.300',
-              color:
-                color === 'primary' ? 'primary.contrastText' :
-                color === 'success' ? 'success.contrastText' :
-                color === 'error' ? 'error.contrastText' :
-                'text.primary',
-              textTransform: 'capitalize',
-            }}
-          >
-            {status}
-          </Box>
+          <Chip
+            label={status}
+            size="small"
+            color={color}
+            variant="outlined"
+          />
         );
       },
     },
