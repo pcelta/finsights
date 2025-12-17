@@ -1,7 +1,12 @@
+import { BrowserRouter as Router } from 'react-router-dom';
 import Dashboard from './components/material-ui/dashboard/Dashboard';
 
 function App() {
-  return <Dashboard />;
+  return (
+    <Router>
+      <Dashboard />
+    </Router>
+  );
 }
 
 export default App;

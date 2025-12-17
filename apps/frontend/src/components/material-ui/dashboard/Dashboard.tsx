@@ -2,6 +2,7 @@ import type {} from '@mui/x-date-pickers/themeAugmentation';
 import type {} from '@mui/x-charts/themeAugmentation';
 import type {} from '@mui/x-data-grid/themeAugmentation';
 import type {} from '@mui/x-tree-view/themeAugmentation';
+import { Routes, Route } from 'react-router-dom';
 import { alpha } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
@@ -11,6 +12,7 @@ import Header from './components/Header';
 import MainGrid from './components/MainGrid';
 import SideMenu from './components/SideMenu';
 import AppTheme from '../shared-theme/AppTheme';
+import ImportsPage from '../../../pages/Imports/ImportsPage';
 import {
   chartsCustomizations,
   dataGridCustomizations,
@@ -53,7 +55,10 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
             }}
           >
             <Header />
-            <MainGrid />
+            <Routes>
+              <Route path="/" element={<MainGrid />} />
+              <Route path="/imports" element={<ImportsPage />} />
+            </Routes>
           </Stack>
         </Box>
       </Box>

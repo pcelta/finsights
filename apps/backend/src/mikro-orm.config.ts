@@ -3,10 +3,12 @@ import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { Account } from './entities/account.entity';
 import { Transaction } from './entities/transaction.entity';
 import { TransactionCategory } from './entities/transaction-category.entity';
+import { FinancialInstitution } from './entities/financial-institution.entity';
+import { StatementImport } from './entities/statement-import.entity';
 
 const config: Options = {
   driver: PostgreSqlDriver,
-  entities: [Account, Transaction, TransactionCategory],
+  entities: [Account, Transaction, TransactionCategory, FinancialInstitution, StatementImport],
   dbName: process.env.DB_NAME || 'finsinghts',
   host: process.env.DB_HOST || 'localhost',
   port: parseInt(process.env.DB_PORT || '5439'),

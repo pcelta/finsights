@@ -93,3 +93,50 @@ export const transactionApi = {
     return response.data;
   },
 };
+
+export interface FinancialInstitution {
+  uid: string;
+  name: string;
+  description?: string;
+  isEnabled: boolean;
+}
+
+export interface StatementImport {
+  uid: string;
+  financialInstitution: FinancialInstitution;
+  status: 'pending' | 'processing' | 'processed' | 'failed';
+  path: string;
+  error?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export const importApi = {
+  getFinancialInstitutions: async (): Promise<FinancialInstitution[]> => {
+    const response = await axios.get(`${API_BASE}/financial-institutions`);
+    return response.data;
+  },
+
+  uploadStatement: async (file: File, financialInstitutionUid: string): Promise<{ jobId: string; importUid: string }> => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('financial_institution_uid', financialInstitutionUid);
+
+    const response = await axios.post(`${API_BASE}/import/statement`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
+
+  getImportStatus: async (uid: string): Promise<StatementImport> => {
+    const response = await axios.get(`${API_BASE}/import/statement/${uid}`);
+    return response.data;
+  },
+
+  getAllImports: async (): Promise<StatementImport[]> => {
+    const response = await axios.get(`${API_BASE}/imports`);
+    return response.data;
+  },
+};

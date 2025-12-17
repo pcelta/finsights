@@ -4,9 +4,11 @@ const postgresql_1 = require("@mikro-orm/postgresql");
 const account_entity_1 = require("./entities/account.entity");
 const transaction_entity_1 = require("./entities/transaction.entity");
 const transaction_category_entity_1 = require("./entities/transaction-category.entity");
+const financial_institution_entity_1 = require("./entities/financial-institution.entity");
+const statement_import_entity_1 = require("./entities/statement-import.entity");
 const config = {
     driver: postgresql_1.PostgreSqlDriver,
-    entities: [account_entity_1.Account, transaction_entity_1.Transaction, transaction_category_entity_1.TransactionCategory],
+    entities: [account_entity_1.Account, transaction_entity_1.Transaction, transaction_category_entity_1.TransactionCategory, financial_institution_entity_1.FinancialInstitution, statement_import_entity_1.StatementImport],
     dbName: process.env.DB_NAME || 'finsinghts',
     host: process.env.DB_HOST || 'localhost',
     port: parseInt(process.env.DB_PORT || '5439'),
