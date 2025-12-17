@@ -156,6 +156,11 @@ export default function MainGrid() {
         Details
       </Typography>
       <Grid container spacing={2} columns={12}>
+        <Grid size={{ xs: 12, lg: 3 }}>
+          <Stack gap={2} direction={{ xs: 'column', sm: 'row', lg: 'column' }}>
+            <ChartExpensesPerCategory categories={categories} />
+          </Stack>
+        </Grid>
         <Grid size={{ xs: 12, lg: 9 }}>
           <Paper sx={{ p: 2 }}>
             <Typography variant="h6" gutterBottom>
@@ -167,11 +172,6 @@ export default function MainGrid() {
               onTransactionUpdate={handleTransactionUpdate}
             />
           </Paper>
-        </Grid>
-        <Grid size={{ xs: 12, lg: 3 }}>
-          <Stack gap={2} direction={{ xs: 'column', sm: 'row', lg: 'column' }}>
-            <ChartExpensesPerCategory categories={categories} />
-          </Stack>
         </Grid>
       </Grid>
       <Copyright sx={{ my: 4 }} />
