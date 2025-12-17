@@ -27,6 +27,8 @@
     "schema:drop": "mikro-orm schema:drop"
   },
   "dependencies": {
+    "@bull-board/api": "^6.15.0",
+    "@bull-board/express": "^6.15.0",
     "@mikro-orm/cli": "^6.6.1",
     "@mikro-orm/core": "^6.6.1",
     "@mikro-orm/migrations": "^6.6.1",

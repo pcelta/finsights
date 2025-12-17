@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bull';
-import { Queue } from 'bullmq';
+import type { Queue } from 'bull';
 import { StatementImport, StatementImportStatus } from '../entities/statement-import.entity';
 import { StatementImportRepository } from '../repositories/statement-import.repository';
 import { FinancialInstitutionService } from './financial-institution.service';
@@ -29,7 +29,7 @@ export class StatementImportService {
     const savedImport = await this.statementImportRepository.save(statementImport);
 
     // Add job to queue for processing
-    await this.queue.add('process-statement', {
+    await this.queue.add({
       statementImportUid: savedImport.uid,
     });
 
