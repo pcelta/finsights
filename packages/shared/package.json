@@ -1,0 +1,17 @@
+{
+  "name": "@finsinghts/shared",
+  "version": "0.0.1",
+  "description": "Shared types and utilities for finsinghts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}
