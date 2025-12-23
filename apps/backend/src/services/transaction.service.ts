@@ -33,7 +33,10 @@ export class TransactionService {
 
     for (const statementTransaction of bankStatement.transactions) {
       const amount = statementTransaction.debit ?? statementTransaction.credit ?? 0;
-      const type = statementTransaction.debit ? 'expense' : 'income';
+      let type: 'expense' | 'income' | 'transfer' = statementTransaction.debit ? 'expense' : 'income';
+      if (statementTransaction.description.match(/^TRANSFER\ (TO|FROM)/i)) {
+        type = "transfer";
+      }
 
       const hash = this.generateHash(
         statementTransaction.description,
