@@ -140,3 +140,47 @@ export const importApi = {
     return response.data;
   },
 };
+
+export interface SignUpRequest {
+  name: string;
+  email: string;
+  password: string;
+  dob?: string;
+}
+
+export interface SignInRequest {
+  email: string;
+  password: string;
+}
+
+export interface UserAccount {
+  name: string;
+  email: string;
+  dob: string | null;
+}
+
+export interface Token {
+  type: 'access' | 'refresh';
+  token: string;
+  expires_at: string;
+}
+
+export interface SignInResponse {
+  user_account: UserAccount;
+  tokens: Token[];
+}
+
+export const authApi = {
+  signUp: async (data: SignUpRequest): Promise<void> => {
+    await axios.post(`${API_BASE}/user-account/sign-up`, data);
+  },
+
+  signIn: async (data: SignInRequest): Promise<SignInResponse> => {
+    const response = await axios.post(`${API_BASE}/user-account/sign-in`, data);
+    return response.data;
+  },
+
+  activate: async (code: string): Promise<void> => {
+    await axios.get(`${API_BASE}/user-account/activate/${code}`);
+  },
+};
