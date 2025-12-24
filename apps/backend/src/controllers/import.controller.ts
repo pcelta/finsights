@@ -7,12 +7,17 @@ import {
   UploadedFile,
   Body,
   BadRequestException,
+  UseGuards,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import type { Express } from 'express';
 import { StatementImportService } from '../services/statement-import.service';
+import { User } from '../auth/user.decorator';
+import { UserAccount } from '../entities/user-account.entity';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('api/import')
+@UseGuards(JwtAuthGuard)
 export class ImportController {
   constructor(
     private readonly statementImportService: StatementImportService,
@@ -23,6 +28,7 @@ export class ImportController {
   async uploadStatement(
     @UploadedFile() file: Express.Multer.File,
     @Body('financial_institution_uid') financialInstitutionUid: string,
+    @User() user: UserAccount,
   ) {
     if (!file) {
       throw new BadRequestException('File is required');
@@ -35,6 +41,7 @@ export class ImportController {
     const statementImport = await this.statementImportService.create(
       financialInstitutionUid,
       file.path,
+      user,
     );
 
     return {

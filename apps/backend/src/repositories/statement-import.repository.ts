@@ -17,7 +17,7 @@ export class StatementImportRepository {
     return em.findOne(
       StatementImport,
       { uid },
-      { populate: ['financialInstitution'] }
+      { populate: ['financialInstitution', 'userAccount'] }
     );
   }
 

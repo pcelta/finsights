@@ -6,23 +6,26 @@ import { TransactionCategory } from '../entities/transaction-category.entity';
 export class TransactionCategoryRepository {
   constructor(private readonly em: EntityManager) {}
 
-  async findBySlug(slug: string): Promise<TransactionCategory | null> {
+  async findBySlug(slug: string, userAccountId: number): Promise<TransactionCategory | null> {
     const em = this.em.fork();
-    return em.findOne(TransactionCategory, { slug });
+    return em.findOne(TransactionCategory, { slug, userAccount: userAccountId });
   }
 
-  async findAllWithRules(): Promise<TransactionCategory[]> {
+  async findAllWithRules(userAccountId: number): Promise<TransactionCategory[]> {
     const em = this.em.fork();
-    return em.find(TransactionCategory, { rules: { $ne: null } });
+    return em.find(TransactionCategory, {
+      rules: { $ne: null },
+      userAccount: userAccountId
+    });
   }
 
-  async findByUid(uid: string): Promise<TransactionCategory | null> {
+  async findByUid(uid: string, userAccountId: number): Promise<TransactionCategory | null> {
     const em = this.em.fork();
-    return em.findOne(TransactionCategory, { uid });
+    return em.findOne(TransactionCategory, { uid, userAccount: userAccountId });
   }
 
-  async findAll(): Promise<TransactionCategory[]> {
+  async findAll(userAccountId: number): Promise<TransactionCategory[]> {
     const em = this.em.fork();
-    return em.findAll(TransactionCategory);
+    return em.find(TransactionCategory, { userAccount: userAccountId });
   }
 }

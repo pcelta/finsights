@@ -1,6 +1,7 @@
 import { Entity, PrimaryKey, Property, ManyToOne, Enum } from '@mikro-orm/core';
 import { v4 as uuidv4 } from 'uuid';
 import { FinancialInstitution } from './financial-institution.entity';
+import { UserAccount } from './user-account.entity';
 
 export enum StatementImportStatus {
   PENDING = 'pending',
@@ -19,6 +20,9 @@ export class StatementImport {
 
   @ManyToOne(() => FinancialInstitution)
   financialInstitution!: FinancialInstitution;
+
+  @ManyToOne(() => UserAccount, { nullable: false })
+  userAccount!: UserAccount;
 
   @Enum(() => StatementImportStatus)
   status: StatementImportStatus = StatementImportStatus.PENDING;

@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
@@ -10,8 +11,28 @@ import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import MenuButton from './MenuButton';
 import MenuContent from './MenuContent';
 import CardAlert from './CardAlert';
+import { useAuth } from '../../../../contexts/AuthContext';
 
 function SideMenuMobile({ open, toggleDrawer }) {
+  const navigate = useNavigate();
+  const { user, setUser } = useAuth();
+
+  const getInitials = (name) => {
+    return name
+      .split(' ')
+      .map(n => n[0])
+      .join('')
+      .toUpperCase();
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('user');
+    setUser(null);
+    navigate('/sign-in');
+  };
+
   return (
     <Drawer
       anchor="right"
@@ -38,12 +59,13 @@ function SideMenuMobile({ open, toggleDrawer }) {
           >
             <Avatar
               sizes="small"
-              alt="Riley Carter"
-              src="/static/images/avatar/7.jpg"
+              alt={user?.name || 'User'}
               sx={{ width: 24, height: 24 }}
-            />
+            >
+              {user?.name ? getInitials(user.name) : '?'}
+            </Avatar>
             <Typography component="p" variant="h6">
-              Riley Carter
+              {user?.name || 'Loading...'}
             </Typography>
           </Stack>
           <MenuButton showBadge>
@@ -57,7 +79,12 @@ function SideMenuMobile({ open, toggleDrawer }) {
         </Stack>
         <CardAlert />
         <Stack sx={{ p: 2 }}>
-          <Button variant="outlined" fullWidth startIcon={<LogoutRoundedIcon />}>
+          <Button
+            variant="outlined"
+            fullWidth
+            startIcon={<LogoutRoundedIcon />}
+            onClick={handleLogout}
+          >
             Logout
           </Button>
         </Stack>

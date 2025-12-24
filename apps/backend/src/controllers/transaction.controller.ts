@@ -1,8 +1,12 @@
-import { Controller, Patch, Param, Body } from '@nestjs/common';
+import { Controller, Patch, Param, Body, UseGuards } from '@nestjs/common';
 import { TransactionService } from '../services/transaction.service';
 import { TransactionCategoryService } from '../services/transaction-category.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { User } from '../auth/user.decorator';
+import { UserAccount } from '../entities/user-account.entity';
 
 @Controller('api/transactions')
+@UseGuards(JwtAuthGuard)
 export class TransactionController {
   constructor(
     private readonly transactionService: TransactionService,
@@ -13,8 +17,9 @@ export class TransactionController {
   async updateCategory(
     @Param('uid') uid: string,
     @Body('categoryUid') categoryUid: string | null,
+    @User() user: UserAccount,
   ) {
-    const transaction = await this.transactionService.updateCategory(uid, categoryUid);
+    const transaction = await this.transactionService.updateCategory(uid, categoryUid, user);
 
     return {
       uid: transaction.uid,
@@ -44,8 +49,9 @@ export class TransactionController {
   async updateType(
     @Param('uid') uid: string,
     @Body('type') type: 'income' | 'expense' | 'transfer',
+    @User() user: UserAccount,
   ) {
-    const transaction = await this.transactionService.updateType(uid, type);
+    const transaction = await this.transactionService.updateType(uid, type, user);
 
     return {
       uid: transaction.uid,

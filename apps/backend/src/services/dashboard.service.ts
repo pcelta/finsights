@@ -1,16 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
 import { Transaction } from '../entities/transaction.entity';
+import { UserAccount } from '../entities/user-account.entity';
 
 @Injectable()
 export class DashboardService {
   constructor(private readonly em: EntityManager) {}
 
-  async getSummary(startDate?: string, endDate?: string, categoryUid?: string) {
+  async getSummary(userAccount: UserAccount, startDate?: string, endDate?: string, categoryUid?: string) {
     const em = this.em.fork();
 
     const where: any = {
       type: { $ne: 'transfer' },
+      account: { userAccount: userAccount.id },
     };
     if (startDate) {
       where.transactionDate = { ...where.transactionDate, $gte: new Date(startDate) };
@@ -47,11 +49,12 @@ export class DashboardService {
     };
   }
 
-  async getCategoryBreakdown(startDate?: string, endDate?: string, categoryUid?: string) {
+  async getCategoryBreakdown(userAccount: UserAccount, startDate?: string, endDate?: string, categoryUid?: string) {
     const em = this.em.fork();
 
     const where: any = {
       type: { $ne: 'transfer' },
+      account: { userAccount: userAccount.id },
     };
     if (startDate) {
       where.transactionDate = { ...where.transactionDate, $gte: new Date(startDate) };
@@ -106,6 +109,7 @@ export class DashboardService {
   }
 
   async getTransactions(
+    userAccount: UserAccount,
     startDate?: string,
     endDate?: string,
     categoryUid?: string,
@@ -114,6 +118,7 @@ export class DashboardService {
 
     const where: any = {
       type: { $ne: 'transfer' },
+      account: { userAccount: userAccount.id },
     };
     if (startDate) {
       where.transactionDate = { ...where.transactionDate, $gte: new Date(startDate) };

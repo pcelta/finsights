@@ -15,8 +15,9 @@ export class AccountRepository {
   async findByBsbAndNumber(
     bsb: string,
     number: string,
+    userAccountId: number,
   ): Promise<Account | null> {
     const em = this.em.fork();
-    return em.findOne(Account, { bsb, number });
+    return em.findOne(Account, { bsb, number, userAccount: userAccountId });
   }
 }

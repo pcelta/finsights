@@ -63,7 +63,7 @@ export class StatementProcessor {
       );
 
       // Ingest transactions
-      await this.transactionService.ingest(bankStatement);
+      await this.transactionService.ingest(bankStatement, statementImport.userAccount);
 
       // Mark as processed
       await this.statementImportRepository.updateStatus(

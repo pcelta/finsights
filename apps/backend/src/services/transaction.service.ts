@@ -5,6 +5,7 @@ import { TransactionRepository } from '../repositories/transaction.repository';
 import { AccountService } from './account.service';
 import { Transaction } from 'src/entities/transaction.entity';
 import { TransactionCategoryService } from './transaction-category.service';
+import { UserAccount } from '../entities/user-account.entity';
 
 @Injectable()
 export class TransactionService {
@@ -24,11 +25,12 @@ export class TransactionService {
     return createHash('sha256').update(data).digest('hex');
   }
 
-  async ingest(bankStatement: BankStatement): Promise<void> {
+  async ingest(bankStatement: BankStatement, userAccount: UserAccount): Promise<void> {
     const account = await this.accountService.saveOrCreate(
       bankStatement.account.bsb,
       bankStatement.account.accountNumber,
       bankStatement.account.bankName,
+      userAccount,
     );
 
     for (const statementTransaction of bankStatement.transactions) {
@@ -52,6 +54,7 @@ export class TransactionService {
 
       const category = await this.transactionCategoryService.findOut(
         statementTransaction.description,
+        userAccount,
       );
 
       const transaction = new Transaction();
@@ -68,14 +71,19 @@ export class TransactionService {
     }
   }
 
-  async updateCategory(transactionUid: string, categoryUid: string | null): Promise<Transaction> {
+  async updateCategory(transactionUid: string, categoryUid: string | null, userAccount: UserAccount): Promise<Transaction> {
     const transaction = await this.transactionRepository.findByUid(transactionUid);
     if (!transaction) {
       throw new Error('Transaction not found');
     }
 
+    // Validate ownership - transaction belongs to user through account relationship
+    if (transaction.account.userAccount.id !== userAccount.id) {
+      throw new Error('Unauthorized: Transaction does not belong to this user');
+    }
+
     if (categoryUid) {
-      const category = await this.transactionCategoryService.findByUid(categoryUid);
+      const category = await this.transactionCategoryService.findByUid(categoryUid, userAccount.id);
       if (!category) {
         throw new Error('Category not found');
       }
@@ -87,10 +95,15 @@ export class TransactionService {
     return this.transactionRepository.save(transaction);
   }
 
-  async updateType(transactionUid: string, type: 'income' | 'expense' | 'transfer'): Promise<Transaction> {
+  async updateType(transactionUid: string, type: 'income' | 'expense' | 'transfer', userAccount: UserAccount): Promise<Transaction> {
     const transaction = await this.transactionRepository.findByUid(transactionUid);
     if (!transaction) {
       throw new Error('Transaction not found');
+    }
+
+    // Validate ownership - transaction belongs to user through account relationship
+    if (transaction.account.userAccount.id !== userAccount.id) {
+      throw new Error('Unauthorized: Transaction does not belong to this user');
     }
 
     if (!['income', 'expense', 'transfer'].includes(type)) {

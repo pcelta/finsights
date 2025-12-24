@@ -2,11 +2,12 @@ import { Injectable } from '@nestjs/common';
 import Ajv from 'ajv';
 import { TransactionCategoryRepository } from '../repositories/transaction-category.repository';
 import { TransactionCategory } from '../entities/transaction-category.entity';
+import { UserAccount } from '../entities/user-account.entity';
 
 @Injectable()
 export class TransactionCategoryService {
   private ajv: Ajv;
-  private categories: TransactionCategory[]|null;
+  private categoriesByUser: Map<number, TransactionCategory[]> = new Map();
 
   constructor(
     private readonly transactionCategoryRepository: TransactionCategoryRepository,
@@ -14,24 +15,26 @@ export class TransactionCategoryService {
     this.ajv = new Ajv({ strict: false });
   }
 
-  private async getCategories(): Promise<TransactionCategory[] | null> {
-    if (this.categories) {
-      return this.categories;
+  private async getCategories(userAccountId: number): Promise<TransactionCategory[]> {
+    if (this.categoriesByUser.has(userAccountId)) {
+      return this.categoriesByUser.get(userAccountId)!;
     }
-    this.categories = await this.transactionCategoryRepository.findAllWithRules();
+    const categories = await this.transactionCategoryRepository.findAllWithRules(userAccountId);
+    this.categoriesByUser.set(userAccountId, categories);
 
-    return this.categories;
+    return categories;
   }
 
   public async findOut(
     transactionDescription: string,
+    userAccount: UserAccount,
   ): Promise<TransactionCategory | null> {
-    const categories = await this.getCategories();
+    const categories = await this.getCategories(userAccount.id);
     const schemaTemplate = {
       type: "string",
     };
 
-    for (const category of categories ?? []) {
+    for (const category of categories) {
       if (!category.rules) {
         continue;
       }
@@ -48,14 +51,14 @@ export class TransactionCategoryService {
       }
     }
 
-    return this.transactionCategoryRepository.findBySlug('other');
+    return this.transactionCategoryRepository.findBySlug('other', userAccount.id);
   }
 
-  public async findByUid(uid: string): Promise<TransactionCategory | null> {
-    return this.transactionCategoryRepository.findByUid(uid);
+  public async findByUid(uid: string, userAccountId: number): Promise<TransactionCategory | null> {
+    return this.transactionCategoryRepository.findByUid(uid, userAccountId);
   }
 
-  public async findAll(): Promise<TransactionCategory[]> {
-    return this.transactionCategoryRepository.findAll();
+  public async findAll(userAccountId: number): Promise<TransactionCategory[]> {
+    return this.transactionCategoryRepository.findAll(userAccountId);
   }
 }

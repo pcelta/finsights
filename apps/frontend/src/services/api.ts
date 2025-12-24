@@ -2,6 +2,41 @@ import axios from 'axios';
 
 const API_BASE = import.meta.env.VITE_API_URL + '/api' || 'http://localhost:3000/api';
 
+// Add request interceptor to include JWT token
+axios.interceptors.request.use(
+  (config) => {
+    const accessToken = localStorage.getItem('access_token');
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Add response interceptor to handle 401 errors
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      // Clear tokens and redirect to sign-in
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+      localStorage.removeItem('user');
+
+      // Only redirect if not already on auth pages
+      if (!window.location.pathname.startsWith('/sign-in') &&
+          !window.location.pathname.startsWith('/sign-up') &&
+          !window.location.pathname.startsWith('/activate')) {
+        window.location.href = '/sign-in';
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 export interface Summary {
   totalExpenses: number;
   transactionCount: number;

@@ -12,9 +12,11 @@ import {
   Container,
 } from '@mui/material';
 import { authApi } from '../../services/api';
+import { useAuth } from '../../contexts/AuthContext';
 
 export default function SignInPage() {
   const navigate = useNavigate();
+  const { setUser } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -45,15 +47,14 @@ export default function SignInPage() {
       const refreshToken = response.tokens.find(t => t.type === 'refresh');
 
       if (accessToken) {
-        localStorage.setItem('accessToken', accessToken.token);
-        localStorage.setItem('accessTokenExpiry', accessToken.expires_at);
+        localStorage.setItem('access_token', accessToken.token);
       }
       if (refreshToken) {
-        localStorage.setItem('refreshToken', refreshToken.token);
-        localStorage.setItem('refreshTokenExpiry', refreshToken.expires_at);
+        localStorage.setItem('refresh_token', refreshToken.token);
       }
 
-      localStorage.setItem('userAccount', JSON.stringify(response.user_account));
+      localStorage.setItem('user', JSON.stringify(response.user_account));
+      setUser(response.user_account);
 
       navigate('/');
     } catch (err: any) {

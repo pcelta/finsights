@@ -4,6 +4,7 @@ import type { Queue } from 'bull';
 import { StatementImport, StatementImportStatus } from '../entities/statement-import.entity';
 import { StatementImportRepository } from '../repositories/statement-import.repository';
 import { FinancialInstitutionService } from './financial-institution.service';
+import { UserAccount } from '../entities/user-account.entity';
 
 @Injectable()
 export class StatementImportService {
@@ -15,7 +16,8 @@ export class StatementImportService {
 
   async create(
     financialInstitutionUid: string,
-    filePath: string
+    filePath: string,
+    userAccount: UserAccount,
   ): Promise<StatementImport> {
     const financialInstitution = await this.financialInstitutionService.findByUid(
       financialInstitutionUid
@@ -23,6 +25,7 @@ export class StatementImportService {
 
     const statementImport = new StatementImport();
     statementImport.financialInstitution = financialInstitution;
+    statementImport.userAccount = userAccount;
     statementImport.path = filePath;
     statementImport.status = StatementImportStatus.PENDING;
 

@@ -4,9 +4,11 @@ import {
   Property,
   Collection,
   OneToMany,
+  ManyToOne,
   BeforeCreate,
 } from '@mikro-orm/core';
 import { Transaction } from './transaction.entity';
+import { UserAccount } from './user-account.entity';
 import { randomUUID } from 'crypto';
 
 @Entity({ tableName: 'accounts' })
@@ -31,6 +33,9 @@ export class Account {
 
   @Property({ type: 'text', nullable: true })
   description?: string;
+
+  @ManyToOne(() => UserAccount, { nullable: false })
+  userAccount!: UserAccount;
 
   @Property({ onCreate: () => new Date(), nullable: true })
   createdAt?: Date = new Date();

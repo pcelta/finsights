@@ -1,7 +1,9 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { FinancialInstitutionService } from '../services/financial-institution.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('api/financial-institutions')
+@UseGuards(JwtAuthGuard)
 export class FinancialInstitutionController {
   constructor(
     private readonly financialInstitutionService: FinancialInstitutionService,
